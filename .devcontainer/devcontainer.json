@@ -1,0 +1,43 @@
+{
+	"name": "Azure Terraform (Community)",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			"TERRAFORM_VERSION": "0.14.5",
+			"TFLINT_VERSION": "0.24.1",
+			"TERRAGRUNT_VERSION": "0.28.1",
+			"INSTALL_AZURE_CLI": "true",
+			"INSTALL_DOCKER": "true",
+			"NODE_VERSION": "lts/*"
+		}
+	},
+	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
+	"overrideCommand": false,
+	"runArgs": ["--init", "--env-file",".devcontainer/devcontainer.env"],
+    "remoteEnv": {
+		"TF_BACKEND_RESOURCE_GROUP" : "${containerEnv:TF_BACKEND_RESOURCE_GROUP}",
+		"TF_BACKEND_LOCATION": "${containerEnv:TF_BACKEND_LOCATION}",
+		"TF_BACKEND_STORAGE_ACCOUNT" : "${containerEnv:TF_BACKEND_STORAGE_ACCOUNT}",
+		"TF_BACKEND_CONTAINER" : "${containerEnv:TF_BACKEND_CONTAINER}",
+		"TF_BACKEND_KEY" : "${containerEnv:TF_BACKEND_KEY}"
+	},
+	"settings": {
+		"terraform.languageServer": {
+			"enabled": true,
+			"args": []
+		},
+		"azureTerraform.terminal": "integrated"
+	},
+	"extensions": [
+		"hashicorp.terraform",
+		"ms-vscode.azurecli",
+		"ms-azuretools.vscode-azureterraform",
+		"ms-azuretools.vscode-docker"
+	],
+	"remoteUser": "vscode",
+	"features": {
+		"kubectl-helm-minikube": "latest",
+		"terraform": "latest",
+		"azure-cli": "latest"
+	}
+}
