@@ -1,0 +1,93 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.0.1
+  hooks:
+    # Git style
+    - id: check-added-large-files
+    - id: check-merge-conflict
+    - id: check-vcs-permalinks
+    - id: forbid-new-submodules
+    - id: no-commit-to-branch
+
+    # Common errors
+    - id: end-of-file-fixer
+    - id: trailing-whitespace
+      args: [--markdown-linebreak-ext=md]
+    - id: check-yaml
+    - id: check-merge-conflict
+
+    # Cross platform
+    - id: check-case-conflict
+    - id: mixed-line-ending
+      args: [--fix=lf]
+
+    # Security
+    - id: detect-aws-credentials
+      args: ['--allow-missing-credentials']
+    - id: detect-private-key
+
+    - id: check-byte-order-marker
+      name: 'check BOM - deprecated: use fix-byte-order-marker'
+      description: forbids files which have a utf-8 byte-order marker.
+      entry: check-byte-order-marker
+      types: [text]
+    - id: check-vcs-permalinks
+      name: check vcs permalinks
+      description: ensures that links to vcs websites are permalinks.
+      entry: check-vcs-permalinks
+      language: python
+      types: [text]
+    - id: fix-byte-order-marker
+      name: fix utf-8 byte order marker
+      description: removes utf-8 byte order marker.
+      entry: fix-byte-order-marker
+      language: python
+      types: [text]
+    - id: no-commit-to-branch
+      name: "don't commit to branch"
+      entry: no-commit-to-branch
+      language: python
+      pass_filenames: false
+      always_run: true
+    - id: trailing-whitespace
+      name: trim trailing whitespace
+      description: trims trailing whitespace.
+      entry: trailing-whitespace-fixer
+      language: python
+      types: [text]
+      stages: [commit, push, manual]
+
+- repo: https://github.com/antonbabenko/pre-commit-terraform
+  rev: v1.58.0
+  hooks:
+    #- id: infracost_breakdown
+    - id: terraform_fmt
+    - id: terraform_docs
+    - id: terraform_docs_without_aggregate_type_defaults
+    - id: terraform_validate
+    - id: terraform_providers_lock
+    - id: terraform_tflint
+    - id: terraform_tfsec
+
+    - id: checkov
+      name: Checkov
+      description: Runs checkov on Terraform templates.
+      entry: checkov -d .
+      pass_filenames: false
+      always_run: false
+      files: \.tf$
+      exclude: \.+.terraform\/.*$
+      require_serial: true
+
+    # - id: terrascan
+    #   name: terrascan
+    #   description: Runs terrascan on Terraform templates.
+    #   language: script
+    #   entry: terrascan.sh
+
+- repo: https://github.com/compilerla/conventional-pre-commit
+  rev: v1.2.0
+  hooks:
+    - id: conventional-pre-commit
+      stages: [commit-msg]
+      args: [] # optional: list of Conventional Commits types to allow
